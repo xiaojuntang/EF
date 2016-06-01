@@ -53,6 +53,25 @@ namespace FE.Dao
         /// <param name="whereLambda"></param>
         /// <returns></returns>
         IQueryable<TEntity> FindList(Func<TEntity, bool> whereLambda);
+
+        /// <summary>
+        /// 获取排序列表
+        /// </summary>
+        /// <param name="whereLambda">条件</param>
+        /// <param name="order">排序字段</param>
+        /// <param name="isAsc">是否升序</param>
+        /// <returns></returns>
+        IQueryable<TEntity> FindList(Func<TEntity, bool> whereLambda, Func<TEntity, bool> order, bool isAsc);
+
+        /// <summary>
+        /// 获取排序列表
+        /// </summary>
+        /// <param name="whereLambda">条件</param>
+        /// <param name="fileds">字段</param>
+        /// <param name="order">排序字段</param>
+        /// <param name="isAsc">是否升序</param>
+        /// <returns></returns>
+        IQueryable<TEntity> FindList(Func<TEntity, bool> whereLambda, Func<TEntity, bool> fileds, Func<TEntity, bool> order, bool isAsc);
         /// <summary>
         /// 分页加载数据
         /// </summary>

@@ -19,6 +19,11 @@ namespace EF.Bll
         public T_Test Add(T_Test model)
         {
 
+            service.JoinTest();
+
+
+
+
             List<T_Test> ts = new List<T_Test>();
             for (int i = 0; i < 1000000; i++)
             {
