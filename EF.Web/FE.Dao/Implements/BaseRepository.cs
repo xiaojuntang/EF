@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EF.Domain;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -13,14 +14,13 @@ namespace FE.Dao
     /// <typeparam name="T">定义泛型，约束其是一个类</typeparam>
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
-        //创建EF框架的上下文
-        private DbContext db = EFContextFactory.GetCurrentDbContext();
+        internal HomeWorkContext context;
+        //internal DbSet<TEntity> dbSet;
 
-        internal DbSet<TEntity> dbSet;
-
-        public BaseRepository()
+        public BaseRepository(HomeWorkContext context)
         {
-            //dbSet=
+            this.context = context;
+            //dbSet = context.Set<TEntity>();
         }
 
         // 实现对数据库的添加功能,添加实现EF框架的引用
@@ -29,9 +29,10 @@ namespace FE.Dao
             //EF4.0的写法   添加实体
             //db.CreateObjectSet<T>().AddObject(entity);
             //EF5.0的写法
-            db.Entry<TEntity>(entity).State = EntityState.Added;
+            context.Entry<TEntity>(entity).State = EntityState.Added;
             //下面的写法统一
-            db.SaveChanges();
+            context.SaveChanges();
+            
             return entity;
         }
 
@@ -42,9 +43,9 @@ namespace FE.Dao
             //db.CreateObjectSet<T>().Addach(entity);
             //db.ObjectStateManager.ChangeObjectState(entity, EntityState.Modified);
             //EF5.0的写法
-            db.Set<TEntity>().Attach(entity);
-            db.Entry<TEntity>(entity).State = EntityState.Modified;
-            return db.SaveChanges() > 0;
+            context.Set<TEntity>().Attach(entity);
+            context.Entry<TEntity>(entity).State = EntityState.Modified;
+            return context.SaveChanges() > 0;
         }
 
         //实现对数据库的删除功能
@@ -54,9 +55,9 @@ namespace FE.Dao
             //db.CreateObjectSet<T>().Addach(entity);
             //db.ObjectStateManager.ChangeObjectState(entity, EntityState.Deleted);
             //EF5.0的写法
-            db.Set<TEntity>().Attach(entity);
-            db.Entry<TEntity>(entity).State = EntityState.Deleted;
-            return db.SaveChanges() > 0;
+            context.Set<TEntity>().Attach(entity);
+            context.Entry<TEntity>(entity).State = EntityState.Deleted;
+            return context.SaveChanges() > 0;
         }
 
         //实现对数据库的查询  --简单查询
@@ -69,7 +70,7 @@ namespace FE.Dao
 
             //EF5.0的写法
 
-            return db.Set<TEntity>().Where<TEntity>(whereLambda).AsQueryable();
+            return context.Set<TEntity>().Where<TEntity>(whereLambda).AsQueryable();
 
         }
 
@@ -88,7 +89,7 @@ namespace FE.Dao
         {
             //EF4.0和上面的查询一样
             //EF5.0
-            var temp = db.Set<TEntity>().Where<TEntity>(whereLambda);
+            var temp = context.Set<TEntity>().Where<TEntity>(whereLambda);
             total = temp.Count(); //得到总的条数
             //排序,获取当前页的数据
             if (isAsc)

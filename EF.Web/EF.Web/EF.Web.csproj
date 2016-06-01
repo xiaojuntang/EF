@@ -58,13 +58,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EF.Bll\EF.Bll.csproj">
+      <Project>{96042e74-8b17-46f5-9d89-29740c31ae92}</Project>
+      <Name>EF.Bll</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EF.Domain\EF.Domain.csproj">
       <Project>{54af62b0-c7f3-4833-8a55-c04f9f59b48b}</Project>
       <Name>EF.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FE.Dao\FE.Dao.csproj">
-      <Project>{16ecfebe-a5a1-4f90-a7a1-6ba21d7c4066}</Project>
-      <Name>FE.Dao</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

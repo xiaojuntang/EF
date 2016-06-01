@@ -9,5 +9,14 @@ namespace FE.Dao
 {
     public class TestService : BaseRepository<T_Test>
     {
+        public TestService() : base(new HomeWorkContext())
+        {
+
+        }
+
+        public T_Test Add(T_Test model)
+        {
+            return AddEntity(model);
+        }
     }
 }
