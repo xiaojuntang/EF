@@ -14,17 +14,17 @@ namespace EF.Web
     {
         static void Main(string[] args)
         {
-   ITestBll _test = new TestBll();
+            ITestBll _test = new TestBll();
 
 
 
-         
             T_Test t = new T_Test();
             t.ID = 10;
             t.Name = "6666";
             t.Money = Convert.ToDecimal(152.33);
             t.MyDate = DateTime.Now;
             t.IsTrue = false;
+
             var dd = _test.Add(t);
         }
     }

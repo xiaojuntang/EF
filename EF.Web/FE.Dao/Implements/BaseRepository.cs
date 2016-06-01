@@ -1,4 +1,5 @@
 ﻿using EF.Domain;
+using EntityFramework.BulkInsert.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -17,6 +18,10 @@ namespace FE.Dao
         internal HomeWorkContext context;
         internal DbSet<TEntity> dbSet;
 
+        /// <summary>
+        /// 仓储对象
+        /// </summary>
+        /// <param name="context"></param>
         public BaseRepository(HomeWorkContext context)
         {
             this.context = context;
@@ -37,6 +42,16 @@ namespace FE.Dao
             //下面的写法统一
             context.SaveChanges();
             return entity;
+        }
+
+        /// <summary>
+        /// 批量新增记录
+        /// </summary>
+        /// <param name="entitys"></param>
+        public int BulkInsert(List<TEntity> entitys)
+        {
+            context.BulkInsert(entitys);
+            return context.SaveChanges();
         }
 
         /// <summary>
@@ -82,6 +97,11 @@ namespace FE.Dao
             return DeleteEntity(entity);
         }
 
+        /// <summary>
+        /// 删除多个对象
+        /// </summary>
+        /// <param name="whereLambda"></param>
+        /// <returns></returns>
         public bool Delete(Func<TEntity, bool> whereLambda)
         {
             var tes = this.dbSet.Where(whereLambda).ToList();

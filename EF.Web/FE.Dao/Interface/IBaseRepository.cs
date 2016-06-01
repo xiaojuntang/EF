@@ -19,6 +19,11 @@ namespace FE.Dao
         /// <returns></returns>
         TEntity AddEntity(TEntity entity);
         /// <summary>
+        /// 批量更新记录
+        /// </summary>
+        /// <param name="entitys"></param>
+        int BulkInsert(List<TEntity> entitys);
+        /// <summary>
         /// 更新对象
         /// </summary>
         /// <param name="entity"></param>
