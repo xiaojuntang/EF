@@ -54,6 +54,15 @@ namespace FE.Dao
         /// <returns></returns>
         IQueryable<TEntity> FindList(Func<TEntity, bool> whereLambda);
         /// <summary>
+        /// 分页加载数据
+        /// </summary>
+        /// <param name="whereLambda">过滤条件</param>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageSize">页大小</param>
+        /// <param name="totalCount">总记录数</param>
+        /// <returns></returns>
+        IQueryable<TEntity> FindPageList(Func<TEntity, bool> whereLambda, int pageIndex, int pageSize, out int totalCount);
+        /// <summary>
         /// 分页获取对象列表
         /// </summary>
         /// <typeparam name="S"></typeparam>

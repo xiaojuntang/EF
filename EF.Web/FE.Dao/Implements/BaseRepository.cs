@@ -123,6 +123,23 @@ namespace FE.Dao
         }
 
         /// <summary>
+        /// 分页加载数据
+        /// </summary>
+        /// <param name="whereLambda">过滤条件</param>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageSize">页大小</param>
+        /// <param name="totalCount">总记录数</param>
+        /// <returns></returns>
+        public IQueryable<TEntity> FindPageList(Func<TEntity, bool> whereLambda, int pageIndex, int pageSize, out int totalCount)
+        {
+            var tmp = context.Set<TEntity>().Where<TEntity>(whereLambda);
+            totalCount = tmp.Count();
+            return tmp.Skip<TEntity>(pageSize * (pageIndex - 1))//跳过行数，最终生成的sql语句是Top(n)
+                      .Take<TEntity>(pageSize) //返回指定数量的行
+                      .AsQueryable<TEntity>();
+        }
+
+        /// <summary>
         /// 实现对数据的分页查询
         /// </summary>
         /// <typeparam name="S">按照某个类进行排序</typeparam>
