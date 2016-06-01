@@ -5,28 +5,18 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
       <Schema Namespace="EF.Domain.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <!--生成过程中发现错误:
-警告 6002: 表/视图“TX_HomeWork.dbo.T_Test”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
         <EntityType Name="T_Test">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nchar" MaxLength="10" />
-          <Property Name="MyDate" Type="datetime" />
-          <Property Name="IsTrue" Type="bit" />
-          <Property Name="Money" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Name" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="MyDate" Type="datetime" Nullable="false" />
+          <Property Name="IsTrue" Type="bit" Nullable="false" />
+          <Property Name="Money" Type="decimal" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
         <EntityContainer Name="EFDomainStoreContainer">
-          <EntitySet Name="T_Test" EntityType="Self.T_Test" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [T_Test].[ID] AS [ID], 
-    [T_Test].[Name] AS [Name], 
-    [T_Test].[MyDate] AS [MyDate], 
-    [T_Test].[IsTrue] AS [IsTrue], 
-    [T_Test].[Money] AS [Money]
-    FROM [dbo].[T_Test] AS [T_Test]</DefiningQuery>
-          </EntitySet>
+          <EntitySet Name="T_Test" EntityType="Self.T_Test" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
@@ -38,10 +28,10 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="MyDate" Type="DateTime" Precision="3" />
-          <Property Name="IsTrue" Type="Boolean" />
-          <Property Name="Money" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Name" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="MyDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsTrue" Type="Boolean" Nullable="false" />
+          <Property Name="Money" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
         <EntityContainer Name="HomeWorkContext" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="T_Test" EntityType="Self.T_Test" />

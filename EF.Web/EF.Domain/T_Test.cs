@@ -16,8 +16,8 @@ namespace EF.Domain
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        public Nullable<System.DateTime> MyDate { get; set; }
-        public Nullable<bool> IsTrue { get; set; }
-        public Nullable<decimal> Money { get; set; }
+        public System.DateTime MyDate { get; set; }
+        public bool IsTrue { get; set; }
+        public decimal Money { get; set; }
     }
 }

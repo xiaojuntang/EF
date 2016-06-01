@@ -84,7 +84,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="HomeWork.edmx.diagram">
       <DependentUpon>HomeWork.edmx</DependentUpon>
     </None>
