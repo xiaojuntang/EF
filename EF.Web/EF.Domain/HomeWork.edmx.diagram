@@ -6,6 +6,7 @@
     <edmx:Diagrams>
       <Diagram DiagramId="7db749ee9388417aa80f3caaf7e848dd" Name="Diagram1">
         <EntityTypeShape EntityType="EF.Domain.T_Test" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EF.Domain.TX_PullingWrong" Width="1.5" PointX="3.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -26,5 +26,6 @@ namespace EF.Domain
         }
     
         public virtual DbSet<T_Test> T_Test { get; set; }
+        public virtual DbSet<TX_PullingWrong> TX_PullingWrong { get; set; }
     }
 }

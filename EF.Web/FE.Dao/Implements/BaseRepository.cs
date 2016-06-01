@@ -11,19 +11,23 @@ namespace FE.Dao
     /// <summary>
     /// 实现对数据库的操作(增删改查)的基类
     /// </summary>
-    /// <typeparam name="T">定义泛型，约束其是一个类</typeparam>
+    /// <typeparam name="TEntity">约束类型</typeparam>
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
         internal HomeWorkContext context;
-        //internal DbSet<TEntity> dbSet;
+        internal DbSet<TEntity> dbSet;
 
         public BaseRepository(HomeWorkContext context)
         {
             this.context = context;
-            //dbSet = context.Set<TEntity>();
+            dbSet = context.Set<TEntity>();
         }
 
-        // 实现对数据库的添加功能,添加实现EF框架的引用
+        /// <summary>
+        /// 实现对数据库的添加功能,添加实现EF框架的引用
+        /// </summary>
+        /// <param name="entity">对象</param>
+        /// <returns></returns>
         public TEntity AddEntity(TEntity entity)
         {
             //EF4.0的写法   添加实体
@@ -32,11 +36,14 @@ namespace FE.Dao
             context.Entry<TEntity>(entity).State = EntityState.Added;
             //下面的写法统一
             context.SaveChanges();
-            
             return entity;
         }
 
-        //实现对数据库的修改功能
+        /// <summary>
+        /// 实现对数据库的修改功能
+        /// </summary>
+        /// <param name="entity">对象</param>
+        /// <returns></returns>
         public bool UpdateEntity(TEntity entity)
         {
             //EF4.0的写法
@@ -48,7 +55,11 @@ namespace FE.Dao
             return context.SaveChanges() > 0;
         }
 
-        //实现对数据库的删除功能
+        /// <summary>
+        /// 实现对数据库的删除功能
+        /// </summary>
+        /// <param name="entity">对象</param>
+        /// <returns></returns>
         public bool DeleteEntity(TEntity entity)
         {
             //EF4.0的写法
@@ -60,18 +71,35 @@ namespace FE.Dao
             return context.SaveChanges() > 0;
         }
 
-        //实现对数据库的查询  --简单查询
-        public IQueryable<TEntity> LoadEntities(Func<TEntity, bool> whereLambda)
+        /// <summary>
+        /// 通过ID删除对象
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        public bool Delete(int Id)
         {
+            TEntity entity = this.dbSet.Find(Id);
+            return DeleteEntity(entity);
+        }
 
+        public bool Delete(Func<TEntity, bool> whereLambda)
+        {
+            var tes = this.dbSet.Where(whereLambda).ToList();
+            this.dbSet.RemoveRange(this.dbSet.Where(whereLambda));
+            return context.SaveChanges() > 0;
+        }
+
+        /// <summary>
+        /// 实现对数据库的查询  --简单查询
+        /// </summary>
+        /// <param name="whereLambda">条件</param>
+        /// <returns></returns>
+        public IQueryable<TEntity> FindList(Func<TEntity, bool> whereLambda)
+        {
             //EF4.0的写法
-
             //return db.CreateObjectSet<T>().Where<T>(whereLambda).AsQueryable();
-
             //EF5.0的写法
-
             return context.Set<TEntity>().Where<TEntity>(whereLambda).AsQueryable();
-
         }
 
         /// <summary>
@@ -85,7 +113,7 @@ namespace FE.Dao
         /// <param name="isAsc">如何排序，根据倒叙还是升序</param>
         /// <param name="orderByLambda">根据那个字段进行排序</param>
         /// <returns></returns>
-        public IQueryable<TEntity> LoadPageEntities<S>(int pageIndex, int pageSize, out int total, Func<TEntity, bool> whereLambda, bool isAsc, Func<TEntity, S> orderByLambda)
+        public IQueryable<TEntity> FindPageList<S>(int pageIndex, int pageSize, out int total, Func<TEntity, bool> whereLambda, bool isAsc, Func<TEntity, S> orderByLambda)
         {
             //EF4.0和上面的查询一样
             //EF5.0
@@ -107,9 +135,31 @@ namespace FE.Dao
             return temp.AsQueryable();
         }
 
+        private bool disposed = false;
+
+        /// <summary>
+        /// 资料释放
+        /// </summary>
         public void Dispose()
         {
-            throw new NotImplementedException();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 资料释放
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    context.Dispose();
+                }
+            }
+            this.disposed = true;
         }
     }
 }

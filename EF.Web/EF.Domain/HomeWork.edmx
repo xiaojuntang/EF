@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="EF.Domain.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="EF.Domain.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="T_Test">
           <Key>
             <PropertyRef Name="ID" />
@@ -15,11 +15,38 @@
           <Property Name="IsTrue" Type="bit" Nullable="false" />
           <Property Name="Money" Type="decimal" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
+        <!--生成过程中发现错误:
+警告 6002: 表/视图“TX_HomeWork.dbo.TX_PullingWrong”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+        <EntityType Name="TX_PullingWrong">
+          <Key>
+            <PropertyRef Name="WrongID" />
+            <PropertyRef Name="OpenId" />
+            <PropertyRef Name="QuesId" />
+            <PropertyRef Name="WrongType" />
+            <PropertyRef Name="Remarks" />
+            <PropertyRef Name="WrongDate" />
+          </Key>
+          <Property Name="WrongID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OpenId" Type="char" MaxLength="32" Nullable="false" />
+          <Property Name="QuesId" Type="int" Nullable="false" />
+          <Property Name="WrongType" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Remarks" Type="varchar" MaxLength="300" Nullable="false" />
+          <Property Name="WrongDate" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityContainer Name="EFDomainStoreContainer">
           <EntitySet Name="T_Test" EntityType="Self.T_Test" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TX_PullingWrong" EntityType="Self.TX_PullingWrong" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [TX_PullingWrong].[WrongID] AS [WrongID], 
+    [TX_PullingWrong].[OpenId] AS [OpenId], 
+    [TX_PullingWrong].[QuesId] AS [QuesId], 
+    [TX_PullingWrong].[WrongType] AS [WrongType], 
+    [TX_PullingWrong].[Remarks] AS [Remarks], 
+    [TX_PullingWrong].[WrongDate] AS [WrongDate]
+    FROM [dbo].[TX_PullingWrong] AS [TX_PullingWrong]</DefiningQuery>
+          </EntitySet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="EF.Domain" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -35,7 +62,24 @@
         </EntityType>
         <EntityContainer Name="HomeWorkContext" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="T_Test" EntityType="Self.T_Test" />
+          <EntitySet Name="TX_PullingWrong" EntityType="EF.Domain.TX_PullingWrong" />
         </EntityContainer>
+        <EntityType Name="TX_PullingWrong">
+          <Key>
+            <PropertyRef Name="WrongID" />
+            <PropertyRef Name="OpenId" />
+            <PropertyRef Name="QuesId" />
+            <PropertyRef Name="WrongType" />
+            <PropertyRef Name="Remarks" />
+            <PropertyRef Name="WrongDate" />
+          </Key>
+          <Property Name="WrongID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OpenId" Type="String" Nullable="false" MaxLength="32" FixedLength="true" Unicode="false" />
+          <Property Name="QuesId" Type="Int32" Nullable="false" />
+          <Property Name="WrongType" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Remarks" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="WrongDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -50,6 +94,18 @@
                 <ScalarProperty Name="MyDate" ColumnName="MyDate" />
                 <ScalarProperty Name="IsTrue" ColumnName="IsTrue" />
                 <ScalarProperty Name="Money" ColumnName="Money" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TX_PullingWrong">
+            <EntityTypeMapping TypeName="EF.Domain.TX_PullingWrong">
+              <MappingFragment StoreEntitySet="TX_PullingWrong">
+                <ScalarProperty Name="WrongDate" ColumnName="WrongDate" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="WrongType" ColumnName="WrongType" />
+                <ScalarProperty Name="QuesId" ColumnName="QuesId" />
+                <ScalarProperty Name="OpenId" ColumnName="OpenId" />
+                <ScalarProperty Name="WrongID" ColumnName="WrongID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
