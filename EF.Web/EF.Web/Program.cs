@@ -27,8 +27,6 @@ namespace EF.Web
             //下面的写法统一
             db.SaveChanges();
 
-
-
             TestService _test = new TestService();
 
             T_Test t = new T_Test();
