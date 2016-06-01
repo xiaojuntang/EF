@@ -40,6 +40,8 @@ namespace FE.Dao
         /// </summary>
         public void JoinTest()
         {
+            //context.TX_PullingWrong.Where(p=>p.QuesId==0;
+
             var b = (from p in context.T_Test
                      where p.ID == 3
                      select p).ToList();

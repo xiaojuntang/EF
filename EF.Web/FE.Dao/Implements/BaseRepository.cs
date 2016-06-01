@@ -67,6 +67,7 @@ namespace FE.Dao
             //db.CreateObjectSet<T>().Addach(entity);
             //db.ObjectStateManager.ChangeObjectState(entity, EntityState.Modified);
             //EF5.0的写法
+            
             context.Set<TEntity>().Attach(entity);
             context.Entry<TEntity>(entity).State = EntityState.Modified;
             return context.SaveChanges() > 0;
