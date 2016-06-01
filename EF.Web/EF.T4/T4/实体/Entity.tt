@@ -1,0 +1,99 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Data" #>
+<#@ assembly name="System.xml" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.Data" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+
+//  导入MultipleOutputHelper.ttinclude文件
+<#@include file="$(SolutionDir)EF.T4\MultipleOutputHelper.ttinclude"#> 
+
+<#		
+	    string database="TX_HomeWork";
+		string connectionString= "Data Source=36.110.49.104;Initial Catalog=TX_HomeWork;User ID=Zxxk;Password=qw3e4t5-9o$9r^THeb6y5;Pooling=True;";		
+		SqlConnection conn = new SqlConnection(connectionString);
+		conn.Open();
+	
+		string selectQuery ="SET FMTONLY ON; select * from @tableName; SET FMTONLY OFF;";
+		string sql=string.Format(@"WITH indexCTE AS
+                                    (
+                                        SELECT 
+                                        ic.column_id,
+                                        ic.index_column_id,
+                                        ic.object_id    
+                                        FROM {0}.sys.indexes idx
+                                        INNER JOIN {0}.sys.index_columns ic ON idx.index_id = ic.index_id AND idx.object_id = ic.object_id
+                                        WHERE  idx.object_id =OBJECT_ID(@tableName) AND idx.is_primary_key=1
+                                    )
+                                    select
+                                    colm.column_id ColumnID,
+                                    CAST(CASE WHEN indexCTE.column_id IS NULL THEN 0 ELSE 1 END AS BIT) IsPrimaryKey,
+                                    colm.name ColumnName,
+                                    systype.name ColumnType,
+                                    colm.is_identity IsIdentity,
+                                    colm.is_nullable IsNullable,
+                                    cast(colm.max_length as int) ByteLength,
+                                    (
+                                        case 
+                                            when systype.name='nvarchar' and colm.max_length>0 then colm.max_length/2 
+                                            when systype.name='nchar' and colm.max_length>0 then colm.max_length/2
+                                            when systype.name='ntext' and colm.max_length>0 then colm.max_length/2 
+                                            else colm.max_length
+                                        end
+                                    ) CharLength,
+                                    cast(colm.precision as int) Precision,
+                                    cast(colm.scale as int) Scale,
+                                    prop.value Remark
+                                    from {0}.sys.columns colm
+                                    inner join {0}.sys.types systype on colm.system_type_id=systype.system_type_id and colm.user_type_id=systype.user_type_id
+                                    left join {0}.sys.extended_properties prop on colm.object_id=prop.major_id and colm.column_id=prop.minor_id
+                                    LEFT JOIN indexCTE ON colm.column_id=indexCTE.column_id AND colm.object_id=indexCTE.object_id                                        
+                                    where colm.object_id=OBJECT_ID(@tableName)
+                                    order by colm.column_id",database);
+		SqlCommand command = new SqlCommand(sql,conn);
+		SqlDataAdapter ad = new SqlDataAdapter(command);
+		System.Data.DataSet ds = new DataSet(); 
+  
+		var manager = Manager.Create(Host, GenerationEnvironment);  
+
+		System.Data.DataTable schema = conn.GetSchema("Tables");
+		foreach(System.Data.DataRow row in schema.Rows)
+		{	
+			ds.Tables.Clear();
+			string tb_name= row["TABLE_NAME"].ToString();		
+			command.CommandText = sql.Replace("@tableName","'"+row["TABLE_NAME"].ToString()+"'");
+			ad.Fill(ds, tb_name);
+			manager.StartNewFile(tb_name+".cs");#>
+
+using System;
+using System.Collections.Generic;
+namespace EF.Domain
+{	
+	/// <summary>
+	/// 实体-<#=tb_name#> 
+	/// </summary>
+	public partial class <#=tb_name#>    
+	{	
+		<#
+		PushIndent("          ");
+		foreach (DataRow dc in ds.Tables[0].Rows) 
+		{
+			string columnType=dc["ColumnType"].ToString();
+			int isNullable=Convert.ToInt32(dc["IsNullable"]);
+			string columnName=dc["ColumnName"].ToString();
+			string remark=dc["Remark"].ToString();
+			WriteLine("/// <summary>\r /// "+remark+"  \r/// <summary>\r public " + Manager.SqlServerDbTypeMap.MapCsharpType(columnType)+ (isNullable==1&&Manager.SqlServerDbTypeMap.MapCsharpType(columnType).ToLower() != "string" ? "? ": " ") + columnName + " { get; set; }");		
+		}
+		PopIndent();
+		#>
+	}
+}
+	
+<#
+		manager.EndBlock();    
+         }            
+        conn.Close();  
+       manager.Process(true);  
+	    #> 
