@@ -40,11 +40,13 @@ namespace FE.Dao
         /// </summary>
         public void JoinTest()
         {
+            var b = (from p in context.T_Test
+                     where p.ID == 3
+                     select p).ToList();
 
+            var data = context.TX_PullingWrong.GroupJoin(context.T_Test, c => c.WrongID, p => p.ID, (c, p) => new { CategoryID = c.WrongID, ProductList = p });
             var aa = context.TX_PullingWrong.Join(context.T_Test, e => e.WrongID, o => o.ID, (e, o) => new { a = o.Name, e.QuesId });
-
             var ddd = aa.ToList();
-
         }
     }
 }
