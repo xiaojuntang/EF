@@ -43,7 +43,12 @@ namespace EF.Bll
 
 
             var ss = service.Delete(p => p.Name.Trim() == "ddd");
-            var s = service.FindList(p => p.Name.Equals("ddd")).ToList<T_Test>();
+
+
+
+            var s = service.FindList(p => p.Name.Equals("ddd")&&p.ID==1).ToList<T_Test>();
+
+
             return service.AddEntity(model);
         }
     }
