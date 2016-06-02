@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extended\T_Test.cs" />
     <Compile Include="HomeWork.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

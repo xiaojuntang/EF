@@ -67,6 +67,7 @@ namespace FE.Dao
             //db.CreateObjectSet<T>().Addach(entity);
             //db.ObjectStateManager.ChangeObjectState(entity, EntityState.Modified);
             //EF5.0的写法
+            
             context.Set<TEntity>().Attach(entity);
             context.Entry<TEntity>(entity).State = EntityState.Modified;
             return context.SaveChanges() > 0;
@@ -121,7 +122,59 @@ namespace FE.Dao
             //EF4.0的写法
             //return db.CreateObjectSet<T>().Where<T>(whereLambda).AsQueryable();
             //EF5.0的写法
-            return context.Set<TEntity>().Where<TEntity>(whereLambda).AsQueryable();
+
+            //延迟加载
+            DbQuery<TEntity> result = dbSet.Where(whereLambda) as DbQuery<TEntity>;
+            //时实加载
+            //IQueryable<TEntity> result = context.Set<TEntity>().Where<TEntity>(whereLambda).AsQueryable();
+            return result;
+        }
+
+        /// <summary>
+        /// 获取排序列表
+        /// </summary>
+        /// <param name="whereLambda">条件</param>
+        /// <param name="order">排序字段</param>
+        /// <param name="isAsc">是否升序</param>
+        /// <returns></returns>
+        public IQueryable<TEntity> FindList(Func<TEntity, bool> whereLambda, Func<TEntity, bool> order, bool isAsc)
+        {
+            DbQuery<TEntity> result;
+            if (isAsc)
+            {
+                //延迟加载
+                result = dbSet.Where(whereLambda).OrderBy(order) as DbQuery<TEntity>;
+            }
+            else
+            {
+                //延迟加载
+                result = dbSet.Where(whereLambda).OrderByDescending(order) as DbQuery<TEntity>;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 获取排序列表
+        /// </summary>
+        /// <param name="whereLambda">条件</param>
+        /// <param name="fileds">字段</param>
+        /// <param name="order">排序字段</param>
+        /// <param name="isAsc">是否升序</param>
+        /// <returns></returns>
+        public IQueryable<TEntity> FindList(Func<TEntity, bool> whereLambda, Func<TEntity, bool> fileds, Func<TEntity, bool> order, bool isAsc)
+        {
+            DbQuery<TEntity> result;
+            if (isAsc)
+            {
+                //延迟加载
+                result = dbSet.Where(whereLambda).OrderBy(order).Select(fileds) as DbQuery<TEntity>;
+            }
+            else
+            {
+                //延迟加载
+                result = dbSet.Where(whereLambda).OrderByDescending(order).Select(fileds) as DbQuery<TEntity>;
+            }
+            return result;
         }
 
         /// <summary>
@@ -174,6 +227,9 @@ namespace FE.Dao
             return temp.AsQueryable();
         }
 
+        /// <summary>
+        /// disposed
+        /// </summary>
         private bool disposed = false;
 
         /// <summary>

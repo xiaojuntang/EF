@@ -34,5 +34,21 @@ namespace FE.Dao
         {
             return context.Database.SqlQuery<DtoUser>("select * from T_Test a,TX_PullingWrong b", new SqlParameter("@Id", 2)).ToList();
         }
+
+        /// <summary>
+        /// 联合查询
+        /// </summary>
+        public void JoinTest()
+        {
+            //context.TX_PullingWrong.Where(p=>p.QuesId==0;
+
+            var b = (from p in context.T_Test
+                     where p.ID == 3
+                     select p).ToList();
+
+            var data = context.TX_PullingWrong.GroupJoin(context.T_Test, c => c.WrongID, p => p.ID, (c, p) => new { CategoryID = c.WrongID, ProductList = p });
+            var aa = context.TX_PullingWrong.Join(context.T_Test, e => e.WrongID, o => o.ID, (e, o) => new { a = o.Name, e.QuesId });
+            var ddd = aa.ToList();
+        }
     }
 }
