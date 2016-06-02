@@ -39,6 +39,13 @@ namespace FE.Dao
         /// <returns></returns>
         int UpdateEntity(TEntity entity, params string[] proNames);
         /// <summary>
+        /// 更新满足条件的实体，返回更新实体的条数
+        /// </summary>
+        /// <param name="whereLambda">更新的条件</param>
+        /// <param name="Updater">更新的值</param>
+        /// <returns>int</returns>
+        int UpdateEntity(Expression<Func<TEntity, bool>> whereLambda, Expression<Func<TEntity, TEntity>> Updater);
+        /// <summary>
         /// 批量更新
         /// </summary>
         /// <param name="entity">要修改的实体对象</param>
@@ -64,6 +71,13 @@ namespace FE.Dao
         /// <param name="whereLambda"></param>
         /// <returns></returns>
         bool Delete(Func<TEntity, bool> whereLambda);
+
+        /// <summary>
+        /// 删除满足条件的实体，返回删除实体的条数
+        /// </summary>
+        /// <param name="whereLambda">删除的条件</param>
+        /// <returns>int</returns>
+        int DeleteEntity(Expression<Func<TEntity, bool>> whereLambda);
 
         /// <summary>
         /// 根据条件删除

@@ -29,7 +29,11 @@ namespace EF.Bll
             T_Test a_2 = new T_Test();
             a_2.Name = "我的7";
             a_2.IsTrue = false;
-            int z_2 = service.Update(a_2, p => p.ID <= 5, "Name", "IsTrue");
+            //int z_2 = service.Update(a_2, p => p.ID <= 5, "Name", "IsTrue");
+
+            //1.3
+            service.UpdateEntity(p => p. < 6, o => new T_Test() { Name = "123" });
+            service.UpdateEntity(p => p.ID < 6, o => new T_Test() { Name = "123" });
 
 
             service.JoinTest();

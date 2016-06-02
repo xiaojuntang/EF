@@ -1,4 +1,5 @@
 ﻿using EF.Domain;
+using Entities.Extensions;
 using EntityFramework.BulkInsert.Extensions;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text;
 
 namespace FE.Dao
 {
@@ -139,6 +141,33 @@ namespace FE.Dao
         }
 
         /// <summary>
+        /// 更新满足条件的实体，返回更新实体的条数
+        /// </summary>
+        /// <param name="whereLambda">更新的条件</param>
+        /// <param name="Updater">更新的值</param>
+        /// <returns>int</returns>
+        public int UpdateEntity(Expression<Func<TEntity, bool>> whereLambda, Expression<Func<TEntity, TEntity>> Updater)
+        {
+            ConditionBuilder Builder = new ConditionBuilder();
+            Builder.Build(whereLambda.Body);
+            string sqlCondition = Builder.Condition;
+            //获取Update的赋值语句
+            var updateMemberExpr = (MemberInitExpression)Updater.Body;
+            var updateMemberCollection = updateMemberExpr.Bindings.Cast<MemberAssignment>().Select(c => new
+            {
+                Name = c.Member.Name,
+                Value = ((ConstantExpression)c.Expression).Value
+            });
+            int i = Builder.Arguments.Length;
+            string sqlUpdateBlock = string.Join(", ", updateMemberCollection.Select(c => string.Format("[{0}]={1}", c.Name, "{" + (i++) + "}")).ToArray());
+            string commandText = string.Format("Update {0} Set {1} Where {2}", typeof(TEntity).Name, sqlUpdateBlock, sqlCondition);
+            //获取SQL参数数组 (包括查询参数和赋值参数)
+            var args = Builder.Arguments.Union(updateMemberCollection.Select(c => c.Value)).ToArray();
+            var Result = context.Database.ExecuteSqlCommand(commandText, args);
+            return Result;
+        }
+
+        /// <summary>
         /// 实现对数据库的删除功能
         /// </summary>
         /// <param name="entity">对象</param>
@@ -175,6 +204,23 @@ namespace FE.Dao
             var tes = this.dbSet.Where(whereLambda).ToList();
             this.dbSet.RemoveRange(this.dbSet.Where(whereLambda));
             return context.SaveChanges() > 0;
+        }
+
+        /// <summary>
+        /// 删除满足条件的实体，返回删除实体的条数
+        /// </summary>
+        /// <param name="whereLambda">删除的条件</param>
+        /// <returns>int</returns>
+        public int DeleteEntity(Expression<Func<TEntity, bool>> whereLambda)
+        {
+            //查询条件表达式转换成SQL的条件语句
+            ConditionBuilder Builder = new ConditionBuilder();
+            Builder.Build(whereLambda.Body);
+            string sqlCondition = Builder.Condition;
+            //获取SQL参数数组
+            var args = Builder.Arguments;
+            var Result = context.Database.ExecuteSqlCommand("Delete From " + typeof(TEntity).Name + " Where " + sqlCondition, args);
+            return Result;
         }
 
         /// <summary>

@@ -73,6 +73,10 @@
       <Project>{54af62b0-c7f3-4833-8a55-c04f9f59b48b}</Project>
       <Name>EF.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tool\Entities.Extensions\Entities.Extensions.csproj">
+      <Project>{d629856f-6f11-4a87-8440-a5b66383a26a}</Project>
+      <Name>Entities.Extensions</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

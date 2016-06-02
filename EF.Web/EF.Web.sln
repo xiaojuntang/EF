@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EF.T4", "EF.T4\EF.T4.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EF.Bll", "EF.Bll\EF.Bll.csproj", "{96042E74-8B17-46F5-9D89-29740C31AE92}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities.Extensions", "Tool\Entities.Extensions\Entities.Extensions.csproj", "{D629856F-6F11-4A87-8440-A5B66383A26A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{96042E74-8B17-46F5-9D89-29740C31AE92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96042E74-8B17-46F5-9D89-29740C31AE92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96042E74-8B17-46F5-9D89-29740C31AE92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D629856F-6F11-4A87-8440-A5B66383A26A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D629856F-6F11-4A87-8440-A5B66383A26A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D629856F-6F11-4A87-8440-A5B66383A26A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D629856F-6F11-4A87-8440-A5B66383A26A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
