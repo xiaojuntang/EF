@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,6 +31,22 @@ namespace FE.Dao
         /// <returns></returns>
         bool UpdateEntity(TEntity entity);
         /// <summary>
+        /// 修改对象
+        /// 例：T u = new T() { uId = 1, uLoginName = "asdfasdf" }; this.Modify(u, "uLoginName");
+        /// </summary>
+        /// <param name="entity">要修改的实体对象</param>
+        /// <param name="proNames">要修改的 属性 名称</param>
+        /// <returns></returns>
+        int UpdateEntity(TEntity entity, params string[] proNames);
+        /// <summary>
+        /// 批量更新
+        /// </summary>
+        /// <param name="entity">要修改的实体对象</param>
+        /// <param name="whereLambda">查询条件</param>
+        /// <param name="modifiedProNames">要修改的 属性 名称</param>
+        /// <returns></returns>
+        int Update(TEntity entity, Expression<Func<TEntity, bool>> whereLambda, params string[] modifiedProNames);
+        /// <summary>
         /// 删除对象
         /// </summary>
         /// <param name="entity"></param>
@@ -47,6 +64,13 @@ namespace FE.Dao
         /// <param name="whereLambda"></param>
         /// <returns></returns>
         bool Delete(Func<TEntity, bool> whereLambda);
+
+        /// <summary>
+        /// 根据条件删除
+        /// </summary>
+        /// <param name="delWhere"></param>
+        /// <returns></returns>
+        int DeleteByExp(Expression<Func<TEntity, bool>> delWhere);
         /// <summary>
         /// 获取对象列表
         /// </summary>
@@ -71,7 +95,7 @@ namespace FE.Dao
         /// <param name="order">排序字段</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns></returns>
-        IQueryable<TEntity> FindList(Func<TEntity, bool> whereLambda, Func<TEntity, bool> fileds, Func<TEntity, bool> order, bool isAsc);
+        IQueryable<TEntity> FindList(Func<TEntity, bool> whereLambda, Func<TEntity, bool> field, Func<TEntity, bool> order, bool isAsc);
         /// <summary>
         /// 分页加载数据
         /// </summary>

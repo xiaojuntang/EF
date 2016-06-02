@@ -3,11 +3,10 @@ using EntityFramework.BulkInsert.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace FE.Dao
 {
@@ -67,10 +66,76 @@ namespace FE.Dao
             //db.CreateObjectSet<T>().Addach(entity);
             //db.ObjectStateManager.ChangeObjectState(entity, EntityState.Modified);
             //EF5.0的写法
-            
             context.Set<TEntity>().Attach(entity);
             context.Entry<TEntity>(entity).State = EntityState.Modified;
             return context.SaveChanges() > 0;
+        }
+
+        /// <summary>
+        /// 修改对象
+        /// 例：T u = new T() { uId = 1, uLoginName = "asdfasdf" }; this.Modify(u, "uLoginName");
+        /// </summary>
+        /// <param name="entity">要修改的实体对象</param>
+        /// <param name="proNames">要修改的 属性 名称</param>
+        /// <returns></returns>
+        public int UpdateEntity(TEntity entity, params string[] proNames)
+        {
+            DbEntityEntry entry = context.Entry<TEntity>(entity);
+            entry.State = EntityState.Unchanged;
+            foreach (string proName in proNames)
+            {
+                entry.Property(proName).IsModified = true;
+            }
+            return context.SaveChanges();
+        }
+
+        /// <summary>
+        /// 批量更新
+        /// </summary>
+        /// <param name="entity">要修改的实体对象</param>
+        /// <param name="whereLambda">查询条件</param>
+        /// <param name="modifiedProNames">要修改的 属性 名称</param>
+        /// <returns></returns>
+        public int Update(TEntity entity, Expression<Func<TEntity, bool>> whereLambda, params string[] modifiedProNames)
+        {
+            //查询要修改的数据             
+            List<TEntity> listModifing = context.Set<TEntity>().Where(whereLambda).ToList();
+            //获取 实体类 类型对象 
+            Type t = typeof(TEntity); // model.GetType();             
+            //获取 实体类 所有的 公有属性
+            List<PropertyInfo> proInfos = t.GetProperties(BindingFlags.Instance | BindingFlags.Public).ToList();
+            //创建 实体属性 字典集合              
+            Dictionary<string, PropertyInfo> dictPros = new Dictionary<string, PropertyInfo>();
+            //将 实体属性 中要修改的属性名 添加到 字典集合中 键：属性名  值：属性对象              
+            proInfos.ForEach(p =>
+            {
+                if (modifiedProNames.Contains(p.Name))
+                {
+                    dictPros.Add(p.Name, p);
+                }
+            });
+            //循环 要修改的属性名              
+            foreach (string proName in modifiedProNames)
+            {
+                //判断 要修改的属性名是否在 实体类的属性集合中存在                 
+                if (dictPros.ContainsKey(proName))
+                {
+                    //如果存在，则取出要修改的 属性对象                      
+                    PropertyInfo proInfo = dictPros[proName];
+                    //取出 要修改的值                      
+                    object newValue = proInfo.GetValue(entity, null);
+                    //object newValue = model.uName; 
+                    //4.4批量设置 要修改 对象的 属性                      
+                    foreach (TEntity usrO in listModifing)
+                    {
+                        //为 要修改的对象 的 要修改的属性 设置新的值                        
+                        proInfo.SetValue(usrO, newValue, null);
+                        //usrO.uName = newValue;                    
+                    }
+                }
+            }
+            //一次性 生成sql语句到数据库执行             
+            return context.SaveChanges();
         }
 
         /// <summary>
@@ -110,6 +175,25 @@ namespace FE.Dao
             var tes = this.dbSet.Where(whereLambda).ToList();
             this.dbSet.RemoveRange(this.dbSet.Where(whereLambda));
             return context.SaveChanges() > 0;
+        }
+
+        /// <summary>
+        /// 根据条件删除
+        /// </summary>
+        /// <param name="delWhere"></param>
+        /// <returns></returns>
+        public int DeleteByExp(Expression<Func<TEntity, bool>> delWhere)
+        {
+            //查询要删除的数据             
+            List<TEntity> listDeleting = context.Set<TEntity>().Where(delWhere).ToList();
+            //3.2将要删除的数据 用删除方法添加到 EF 容器中             
+            listDeleting.ForEach(u =>
+            {
+                context.Set<TEntity>().Attach(u);//先附加到 EF容器                 
+                context.Set<TEntity>().Remove(u);//标识为 删除 状态             
+            });
+            //一次性 生成sql语句到数据库执行删除             
+            return context.SaveChanges();
         }
 
         /// <summary>
@@ -161,18 +245,18 @@ namespace FE.Dao
         /// <param name="order">排序字段</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns></returns>
-        public IQueryable<TEntity> FindList(Func<TEntity, bool> whereLambda, Func<TEntity, bool> fileds, Func<TEntity, bool> order, bool isAsc)
+        public IQueryable<TEntity> FindList(Func<TEntity, bool> whereLambda, Func<TEntity, bool> field, Func<TEntity, bool> order, bool isAsc)
         {
             DbQuery<TEntity> result;
             if (isAsc)
             {
                 //延迟加载
-                result = dbSet.Where(whereLambda).OrderBy(order).Select(fileds) as DbQuery<TEntity>;
+                result = dbSet.Where(whereLambda).OrderBy(order).Select(field) as DbQuery<TEntity>;
             }
             else
             {
                 //延迟加载
-                result = dbSet.Where(whereLambda).OrderByDescending(order).Select(fileds) as DbQuery<TEntity>;
+                result = dbSet.Where(whereLambda).OrderByDescending(order).Select(field) as DbQuery<TEntity>;
             }
             return result;
         }

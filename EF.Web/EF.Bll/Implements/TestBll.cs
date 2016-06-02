@@ -18,12 +18,21 @@ namespace EF.Bll
 
         public T_Test Add(T_Test model)
         {
+            //1.1测试更新
+            T_Test a_1 = new T_Test();
+            a_1.ID = 3;
+            a_1.Name = "我的1";
+            a_1.IsTrue = false;
+            //int z_1 = service.UpdateEntity(a_1, "IsTrue", "Name");
+
+            //1.2测试批量更新
+            T_Test a_2 = new T_Test();
+            a_2.Name = "我的7";
+            a_2.IsTrue = false;
+            int z_2 = service.Update(a_2, p => p.ID <= 5, "Name", "IsTrue");
+
 
             service.JoinTest();
-
-
-
-
             List<T_Test> ts = new List<T_Test>();
             for (int i = 0; i < 1000000; i++)
             {
@@ -51,7 +60,7 @@ namespace EF.Bll
 
 
 
-            var s = service.FindList(p => p.Name.Equals("ddd")&&p.ID==1).ToList<T_Test>();
+            var s = service.FindList(p => p.Name.Equals("ddd") && p.ID == 1).ToList<T_Test>();
 
 
             return service.AddEntity(model);

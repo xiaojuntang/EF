@@ -46,42 +46,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Action.tt</DependentUpon>
     </Compile>
-    <Compile Include="T4\业务逻辑\HW_BankDal.cs">
-      <DependentUpon>Action.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\业务逻辑\HW_CategoryQuestionDal.cs">
-      <DependentUpon>Action.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\业务逻辑\HW_NodeCategoryDal.cs">
-      <DependentUpon>Action.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\业务逻辑\HW_NodeCategoryTjDal.cs">
-      <DependentUpon>Action.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\业务逻辑\HW_ZujuanNodesDal.cs">
-      <DependentUpon>Action.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\业务逻辑\TX_AnswerDal.cs">
-      <DependentUpon>Action.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\业务逻辑\TX_HomeWorkDal.cs">
-      <DependentUpon>Action.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\业务逻辑\TX_HomeworkQuestionDal.cs">
-      <DependentUpon>Action.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\业务逻辑\TX_HomeWorkUserDal.cs">
-      <DependentUpon>Action.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\业务逻辑\TX_PullingWrongDal.cs">
-      <DependentUpon>Action.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\业务逻辑\TX_TencentMataDal.cs">
-      <DependentUpon>Action.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\业务逻辑\T_TestDal.cs">
-      <DependentUpon>Action.tt</DependentUpon>
-    </Compile>
     <Compile Include="T4\实体\Entity.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
