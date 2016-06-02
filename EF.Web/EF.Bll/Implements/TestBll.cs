@@ -32,7 +32,7 @@ namespace EF.Bll
             //int z_2 = service.Update(a_2, p => p.ID <= 5, "Name", "IsTrue");
 
             //1.3
-            service.UpdateEntity(p => p.ID < 6, o => new T_Test() { Name = "123" });
+            int z_3 = service.UpdateEntity(p => p.ID < 6, o => new T_Test() { Name = "123" });
 
 
             service.JoinTest();
