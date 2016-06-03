@@ -317,7 +317,7 @@ namespace FE.Dao
         /// <returns></returns>
         public IQueryable<TEntity> FindPageList(Func<TEntity, bool> whereLambda, int pageIndex, int pageSize, out int totalCount)
         {
-            var tmp = context.Set<TEntity>().Where<TEntity>(whereLambda);
+            var tmp = context.Set<TEntity>().Where<TEntity>(whereLambda) as DbQuery<TEntity>;
             totalCount = tmp.Count();
             return tmp.Skip<TEntity>(pageSize * (pageIndex - 1))//跳过行数，最终生成的sql语句是Top(n)
                       .Take<TEntity>(pageSize) //返回指定数量的行
