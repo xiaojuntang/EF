@@ -59,8 +59,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Comm.cs" />
+    <Compile Include="Implements\Base2Repository.cs" />
     <Compile Include="Implements\BaseRepository.cs" />
     <Compile Include="Implements\TestService.cs" />
+    <Compile Include="Interface\IBase2Repository.cs" />
     <Compile Include="Interface\IBaseRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
