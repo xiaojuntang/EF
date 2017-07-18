@@ -51,42 +51,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Entity.tt</DependentUpon>
     </Compile>
-    <Compile Include="T4\实体\HW_Bank.cs">
-      <DependentUpon>Entity.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\实体\HW_CategoryQuestion.cs">
-      <DependentUpon>Entity.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\实体\HW_NodeCategory.cs">
-      <DependentUpon>Entity.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\实体\HW_NodeCategoryTj.cs">
-      <DependentUpon>Entity.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\实体\HW_ZujuanNodes.cs">
-      <DependentUpon>Entity.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\实体\TX_Answer.cs">
-      <DependentUpon>Entity.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\实体\TX_HomeWork.cs">
-      <DependentUpon>Entity.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\实体\TX_HomeworkQuestion.cs">
-      <DependentUpon>Entity.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\实体\TX_HomeWorkUser.cs">
-      <DependentUpon>Entity.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\实体\TX_PullingWrong.cs">
-      <DependentUpon>Entity.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\实体\TX_TencentMata.cs">
-      <DependentUpon>Entity.tt</DependentUpon>
-    </Compile>
-    <Compile Include="T4\实体\T_Test.cs">
-      <DependentUpon>Entity.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

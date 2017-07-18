@@ -11,8 +11,8 @@
 <#@include file="$(SolutionDir)EF.T4\MultipleOutputHelper.ttinclude"#> 
 
 <#		
-	    string database="TX_HomeWork";
-		string connectionString= "Data Source=36.110.49.104;Initial Catalog=TX_HomeWork;User ID=Zxxk;Password=qw3e4t5-9o$9r^THeb6y5;Pooling=True;";		
+	    string database="HS_HomeWork";
+		string connectionString= "Data Source=36.110.49.104;Initial Catalog=HS_HomeWork;User ID=Zxxk;Password=qw3e4t5-9o$9r^THeb6y5;Pooling=True;";		
 		SqlConnection conn = new SqlConnection(connectionString);
 		conn.Open();
 	
@@ -84,7 +84,10 @@ namespace EF.Domain
 			int isNullable=Convert.ToInt32(dc["IsNullable"]);
 			string columnName=dc["ColumnName"].ToString();
 			string remark=dc["Remark"].ToString();
-			WriteLine("/// <summary>\r /// "+remark+"  \r/// <summary>\r public " + Manager.SqlServerDbTypeMap.MapCsharpType(columnType)+ (isNullable==1&&Manager.SqlServerDbTypeMap.MapCsharpType(columnType).ToLower() != "string" ? "? ": " ") + columnName + " { get; set; }");		
+			WriteLine("/// <summary>");
+			WriteLine("/// "+remark);
+			WriteLine("/// <summary>");
+			WriteLine("public " + Manager.SqlServerDbTypeMap.MapCsharpType(columnType)+ (isNullable==1&&Manager.SqlServerDbTypeMap.MapCsharpType(columnType).ToLower() != "string" ? "? ": " ") + columnName + " { get; set; }");
 		}
 		PopIndent();
 		#>
